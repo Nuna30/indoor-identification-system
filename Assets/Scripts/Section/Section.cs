@@ -14,7 +14,13 @@ public class Section : MonoBehaviour
 
     [Header("Human 스폰 설정")]
     [Tooltip("배치할 Human 간의 간격을 설정합니다.")]
-    [SerializeField] private float humanSpacing = 1.5f;
+    [SerializeField] private float humanSpacing = 0.6f;
+
+    [Tooltip("영역 경계로부터 떨어질 최소 마진을 설정합니다.")]
+    [SerializeField] private float boundaryMargin = 0.3f;
+
+    [Tooltip("사람들이 겹치지 않게 유지할 최소 간격을 설정합니다.")]
+    [SerializeField] private float minSpacing = 0.25f;
 
     /// <summary>
     /// 직사각형을 구성하는 4개의 꼭짓점 좌표 배열입니다. (x, y)는 각각 (x, z) 평면 좌표를 의미합니다.
@@ -56,6 +62,24 @@ public class Section : MonoBehaviour
     }
 
     /// <summary>
+    /// Section 영역의 가로 길이를 가져옵니다.
+    /// </summary>
+    public float GetSectionWidth()
+    {
+        if (coordinates == null || coordinates.Length != 4) return 10f;
+        return Vector2.Distance(coordinates[0], coordinates[1]);
+    }
+
+    /// <summary>
+    /// Section 영역의 세로(깊이) 길이를 가져옵니다.
+    /// </summary>
+    public float GetSectionHeight()
+    {
+        if (coordinates == null || coordinates.Length != 4) return 10f;
+        return Vector2.Distance(coordinates[1], coordinates[2]);
+    }
+
+    /// <summary>
     /// 지정된 인원 수(n)에 맞게 겹치지 않고 중앙 정렬된 스폰 좌표들을 반환합니다.
     /// </summary>
     public Vector3[] GetSpawnPositions(int count)
@@ -75,6 +99,32 @@ public class Section : MonoBehaviour
             rows = Mathf.CeilToInt((float)count / cols);
         }
 
+        // 영역 크기와 마진에 맞춰 동적 간격(Spacing) 계산
+        float areaWidth = GetSectionWidth();
+        float areaHeight = GetSectionHeight();
+
+        float maxAllowedWidth = Mathf.Max(0.01f, areaWidth - 2 * boundaryMargin);
+        float maxAllowedHeight = Mathf.Max(0.01f, areaHeight - 2 * boundaryMargin);
+
+        float activeSpacing = humanSpacing;
+
+        // X축 방향 간격 제한 적용
+        if (cols > 1)
+        {
+            float maxSpacingX = maxAllowedWidth / (cols - 1);
+            activeSpacing = Mathf.Min(activeSpacing, maxSpacingX);
+        }
+
+        // Z축 방향 간격 제한 적용
+        if (rows > 1)
+        {
+            float maxSpacingZ = maxAllowedHeight / (rows - 1);
+            activeSpacing = Mathf.Min(activeSpacing, maxSpacingZ);
+        }
+
+        // 사람들이 너무 밀착해서 겹치지 않게 최소 간격 보장
+        activeSpacing = Mathf.Max(activeSpacing, minSpacing);
+
         Vector3[] positions = new Vector3[count];
         Vector3 center = transform.position;
 
@@ -90,8 +140,8 @@ public class Section : MonoBehaviour
                 colsInThisRow = count - (row * cols);
             }
 
-            float xOffset = (col - (colsInThisRow - 1) / 2f) * humanSpacing;
-            float zOffset = (row - (rows - 1) / 2f) * humanSpacing;
+            float xOffset = (col - (colsInThisRow - 1) / 2f) * activeSpacing;
+            float zOffset = (row - (rows - 1) / 2f) * activeSpacing;
 
             // Section 오브젝트의 회전값을 반영하여 로컬 오프셋을 월드 오프셋으로 변환
             Vector3 localOffset = new Vector3(xOffset, 0, zOffset);
