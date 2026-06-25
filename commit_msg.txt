@@ -1,0 +1,10 @@
+Feat: 실시간 CSI 기반 캐릭터 스폰 및 색상 변경 기능 구현
+
+- Packages/manifest.json에 NativeWebSocket 패키지 추가
+- CSIReceiver.cs에서 새 Input System과 레거시 Input Manager 모두 대응하도록 입력 처리 수정
+- Human.cs에 Awake 단계 지연 생성 및 캐릭터 색상 변경 API(SetColor) 추가
+- Scenario1TestHumanSpawn.cs 신규 작성
+  - 파이썬 웹소켓 통신을 이용한 실시간 CSI 추론 결과 수신
+  - 인물별 매핑 색상 구현 (한별: 빨강, 민경: 노랑, 민현: 초록, 조교님: 파랑)
+  - 기존 Section의 정렬 알고리즘(GetSpawnPositions) 연동 및 코드 상의 커스텀 좌표 매핑 지원
+- MainScene.unity에 Scenario1TestHumanSpawn 테스트 게임 오브젝트 배치

@@ -17,7 +17,7 @@ public class Section : MonoBehaviour
     [SerializeField] private float humanSpacing = 0.6f;
 
     [Tooltip("영역 경계로부터 떨어질 최소 마진을 설정합니다.")]
-    [SerializeField] private float boundaryMargin = 0.3f;
+    [SerializeField] private float boundaryMargin = 0.6f;
 
     [Tooltip("사람들이 겹치지 않게 유지할 최소 간격을 설정합니다.")]
     [SerializeField] private float minSpacing = 0.25f;
