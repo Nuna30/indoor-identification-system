@@ -177,36 +177,24 @@ public class Scenario1TestHumanSpawn : MonoBehaviour
                 {
                     PresenceItem person = itemsInZone[i];
                     Vector3 spawnPos = targetPositions[i];
-                    Color personColor = GetColorByName(person.name);
 
                     if (activeHumans.ContainsKey(person.name))
                     {
-                        // 이미 스폰된 인물이면 위치 및 색상 업데이트
+                        // 이미 스폰된 인물이면 위치 업데이트 및 인물 에셋 적용 확인
                         GameObject existingObj = activeHumans[person.name];
                         if (existingObj != null)
                         {
                             existingObj.transform.position = spawnPos;
                             
                             Human humanComp = existingObj.GetComponent<Human>();
-                            if (humanComp != null)
-                            {
-                                humanComp.SetColor(personColor);
-                            }
+                            if (humanComp != null) humanComp.SetPerson(person.name);
                         }
                     }
                     else
                     {
-                        // 새로운 인물이면 스폰 후 색상 설정
-                        GameObject newHuman = humanSpawnSystem.SpawnHuman(spawnPos, Quaternion.identity);
-                        if (newHuman != null)
-                        {
-                            Human humanComp = newHuman.GetComponent<Human>();
-                            if (humanComp != null)
-                            {
-                                humanComp.SetColor(personColor);
-                            }
-                            activeHumans[person.name] = newHuman;
-                        }
+                        // 새로운 인물이면 인물 에셋과 함께 스폰
+                        GameObject newHuman = humanSpawnSystem.SpawnHuman(spawnPos, Quaternion.identity, person.name);
+                        if (newHuman != null) activeHumans[person.name] = newHuman;
                     }
                 }
             }

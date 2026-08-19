@@ -44,4 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd5280f882b13634dbbc9319b2046b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Human
-  humanAsset: {fileID: 919132149155446097, guid: 885125cce81ec8f4ebd3bb8eca2d3e87, type: 3}
+  defaultHumanAsset: {fileID: 919132149155446097, guid: 885125cce81ec8f4ebd3bb8eca2d3e87, type: 3}
+  hanbyulAsset: {fileID: 3816980833066658380, guid: 5a33adeb655cab940964ab7144e1eb74, type: 3}
+  minkyungAsset: {fileID: 2267449501926973867, guid: f8bc72537fc198940b6f89797e5a2df9, type: 3}
+  minhyeonAsset: {fileID: 1377676552296159099, guid: 889f98c0401f18a4b96d32245bc37912, type: 3}
+  assistantAsset: {fileID: 5053596519986007490, guid: 33f924c9592befd4f9b53a0fd9f36a2f, type: 3}

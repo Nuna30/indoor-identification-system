@@ -13,9 +13,14 @@ public class HumanSpawnSystem : MonoBehaviour
         spawner = new HumanSpawner(humanPrefab);
     }
 
-    public GameObject SpawnHuman(Vector3 position, Quaternion rotation)
+    public GameObject SpawnHuman(Vector3 position, Quaternion rotation, string personName = "")
     {
-        return spawner.Spawn(position, rotation);
+        return spawner.Spawn(position, rotation, personName);
+    }
+
+    public GameObject SpawnHuman(Vector3 position, Quaternion rotation, PersonIdentity identity)
+    {
+        return spawner.Spawn(position, rotation, identity);
     }
 
     public void DespawnHuman(GameObject human)

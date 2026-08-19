@@ -13,9 +13,9 @@ public class HumanSpawner
     }
 
     /// <summary>
-    /// 실제 스폰 로직을 수행합니다. (MonoBehaviour 상속 없이도 Object.Instantiate 호출이 가능합니다.)
+    /// 실제 스폰 로직을 수행합니다. (인물 이름 지정 지원)
     /// </summary>
-    public GameObject Spawn(Vector3 position, Quaternion rotation)
+    public GameObject Spawn(Vector3 position, Quaternion rotation, string personName = "")
     {
         if (humanPrefab == null)
         {
@@ -24,6 +24,28 @@ public class HumanSpawner
         }
 
         GameObject newHuman = Object.Instantiate(humanPrefab, position, rotation);
+        if (!string.IsNullOrEmpty(personName))
+        {
+            Human humanComp = newHuman.GetComponent<Human>();
+            if (humanComp != null) humanComp.SetPerson(personName);
+        }
+
+        spawnedHumans.Add(newHuman);
+        return newHuman;
+    }
+
+    public GameObject Spawn(Vector3 position, Quaternion rotation, PersonIdentity identity)
+    {
+        if (humanPrefab == null)
+        {
+            Debug.LogWarning("HumanSpawner: 지정된 프리팹이 없어 스폰할 수 없습니다.");
+            return null;
+        }
+
+        GameObject newHuman = Object.Instantiate(humanPrefab, position, rotation);
+        Human humanComp = newHuman.GetComponent<Human>();
+        if (humanComp != null) humanComp.SetPerson(identity);
+
         spawnedHumans.Add(newHuman);
         return newHuman;
     }
@@ -34,12 +56,7 @@ public class HumanSpawner
     public void Despawn(GameObject human)
     {
         if (human == null) return;
-
-        if (spawnedHumans.Contains(human))
-        {
-            spawnedHumans.Remove(human);
-        }
-
+        if (spawnedHumans.Contains(human)) spawnedHumans.Remove(human);
         Object.Destroy(human);
     }
 
